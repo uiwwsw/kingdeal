@@ -5,7 +5,7 @@ import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:neat_periodic_task/neat_periodic_task.dart';
 
-enum DataKey { title, price, src }
+enum DataKey { id, title, price, src }
 
 enum ConvenienceStoreKey { gs25, cu, emart24 }
 
@@ -35,9 +35,10 @@ class CrawlerService {
           (jsonDecode(jsonDecode(response.body))['results']
                   as Iterable<dynamic>)
               .where((element) => element['goodsStatNm'] == '정상');
-      for (final webtoon in webtoons) {
-        // print(webtoon['goodsNm']);
+      var i = 0;
+      for (final (webtoon) in webtoons) {
         data.add({
+          DataKey.id.name: (++i).toString(),
           DataKey.title.name: webtoon['goodsNm'],
           DataKey.price.name: webtoon['price'].toString().split('.')[0],
           DataKey.src.name: webtoon['attFileNm'],
@@ -82,6 +83,7 @@ class CrawlerService {
       // }
       final box = parse(response.body).querySelectorAll('.prod_list');
       // print(box);
+      var i = 0;
       for (final element in box) {
         final reg = RegExp('src="(\\S+)"');
         final title = element.querySelector('.name')?.text.trim();
@@ -94,6 +96,7 @@ class CrawlerService {
             reg.firstMatch(element.querySelector('[src]')?.outerHtml ?? '')?[1];
 
         data.add({
+          DataKey.id.name: (++i).toString(),
           DataKey.title.name: title,
           DataKey.price.name: price,
           DataKey.src.name: src
@@ -128,6 +131,7 @@ class CrawlerService {
       // }
       final box = parse(response.body).querySelectorAll('.itemWrap');
       // print(box);
+      var i = 0;
       for (final element in box) {
         final reg = RegExp('src="(\\S+)"');
         final title = element.querySelector('.itemtitle')?.text.trim();
@@ -141,6 +145,7 @@ class CrawlerService {
             reg.firstMatch(element.querySelector('[src]')?.outerHtml ?? '')?[1];
 
         data.add({
+          DataKey.id.name: (++i).toString(),
           DataKey.title.name: title,
           DataKey.price.name: price,
           DataKey.src.name: src
