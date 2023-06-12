@@ -3,6 +3,12 @@ import 'package:kingdeal/services/api_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   Future<void> _pullRefresh() async {
     ApiService().getDatas();
   }
@@ -28,11 +34,5 @@ class HomeScreen extends StatefulWidget {
             ],
           ),
         ));
-  }
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
   }
 }
