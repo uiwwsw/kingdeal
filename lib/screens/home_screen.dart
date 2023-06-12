@@ -1,19 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:kingdeal/services/api_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+  Future<void> _pullRefresh() async {
+    ApiService().getDatas();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-      elevation: 0,
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.green,
-      title: const Text(
-        "Today's Toons",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-      ),
-    ));
+          elevation: 0,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.green,
+          title: const Text(
+            "킹받는 킹딜",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          ),
+        ),
+        body: RefreshIndicator(
+          onRefresh: _pullRefresh,
+          child: ListView(
+            children: const [
+              Text('ddd'),
+              Text('ddd'),
+            ],
+          ),
+        ));
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
   }
 }
