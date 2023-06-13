@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:kingdeal/services/api_service.dart';
 
@@ -9,7 +11,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Map<String, List<dynamic>> data;
+  Map<String, List<dynamic>> data = {};
   Future<void> _pullRefresh() async {
     final res = await ApiService().getDatas();
     // res.values.map((x) => {
@@ -19,8 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
       data = res;
     });
     // for (var t in products) {
-    //   String a = t;
-    //   print(jsonDecode(t));
+    //   Map<String, String> d = Map.from(t);
+    //   print(d['title']);
     // }
     // prin
   }
@@ -30,6 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
     for (var element in data.values) {
       d.addAll(element);
     }
+    // List<Map<String, String>> d = [];
+    // for (List<dynamic> elements in data.values) {
+    //   for (dynamic element in elements) {
+    //     d.add(Map.from(element));
+    //   }
+    // }
     return d;
   }
 
@@ -51,13 +59,55 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: _pullRefresh,
-        child: ListView(children: const <Widget>[
-          // if (products.isNotEmpty)
-          //   for (var item in products) Text(item?.title)
-          // else
-          //   const Text('Nope. No items here.'),
+        child: ListView(children: <Widget>[
+          if (products.isDefinedAndNotNull)
+            for (dynamic item in products) Card(item: Map.from(item))
+          else
+            const Text('Nope. No items here.'),
         ]),
       ),
     );
   }
 }
+
+class Card extends StatelessWidget {
+  final Map<dynamic, dynamic> item;
+  late final String title;
+  late final String id;
+  late final String src;
+  late final String price;
+  Card({
+    super.key,
+    required this.item,
+  }) {
+    title = item['title'];
+    id = item['id'];
+    src = item['src'];
+    price = item['price'];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(title),
+        Text(src),
+        Text(price),
+      ],
+    );
+  }
+}
+// class Card extends StatefulWidget {
+//   final Map<dynamic, dynamic> item;
+//   const Card({super.key, required this.item});
+
+//   @override
+//   State<Card> createState() => _CardState();
+// }
+
+// class _CardState extends State<Card> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Placeholder();
+//   }
+// }
