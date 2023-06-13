@@ -12,19 +12,26 @@ class _HomeScreenState extends State<HomeScreen> {
   late Map<String, List<dynamic>> data;
   Future<void> _pullRefresh() async {
     final res = await ApiService().getDatas();
-    print(res.keys);
-    // setState(() {
-    //   data = res;
+    // res.values.map((x) => {
+    //   data.addAll();
     // });
+    setState(() {
+      data = res;
+    });
+    // for (var t in products) {
+    //   String a = t;
+    //   print(jsonDecode(t));
+    // }
+    // prin
   }
 
-  // List<dynamic> get products {
-  //   var d = [];
-  //   for (var element in data.values) {
-  //     d.add(element);
-  //   }
-  //   return d;
-  // }
+  List<dynamic> get products {
+    var d = [];
+    for (var element in data.values) {
+      d.addAll(element);
+    }
+    return d;
+  }
 
   _HomeScreenState() {
     _pullRefresh();
@@ -44,9 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: _pullRefresh,
-        child: ListView(
-            // children: List.from(products),
-            ),
+        child: ListView(children: const <Widget>[
+          // if (products.isNotEmpty)
+          //   for (var item in products) Text(item?.title)
+          // else
+          //   const Text('Nope. No items here.'),
+        ]),
       ),
     );
   }
