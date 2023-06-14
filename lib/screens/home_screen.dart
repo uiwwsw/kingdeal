@@ -1,4 +1,4 @@
-import 'dart:js_interop';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:kingdeal/services/api_service.dart';
@@ -11,35 +11,37 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Map<String, List<dynamic>> data = {};
+  List products = [];
+  late String updateAt;
   Future<void> _pullRefresh() async {
     final res = await ApiService().getDatas();
     // res.values.map((x) => {
     //   data.addAll();
     // });
     setState(() {
-      data = res;
+      products = jsonDecode(res['data']);
+      updateAt = res['updateAt'];
     });
+    // print(res['data']);
+    // ddt.map((x) {
+    //   print(x);
+    // });
+    // ddt.map((x) {
+    //   print(x);
+    // });
     // for (var t in products) {
     //   Map<String, String> d = Map.from(t);
     //   print(d['title']);
     // }
     // prin
+    // print(products);
   }
 
-  List<dynamic> get products {
-    var d = [];
-    for (var element in data.values) {
-      d.addAll(element);
-    }
-    // List<Map<String, String>> d = [];
-    // for (List<dynamic> elements in data.values) {
-    //   for (dynamic element in elements) {
-    //     d.add(Map.from(element));
-    //   }
-    // }
-    return d;
-  }
+  // List<dynamic> get products {
+
+  //   if (data['data'] is List) return jsonDecode(data['data']);
+  //   return [];
+  // }
 
   _HomeScreenState() {
     _pullRefresh();
@@ -60,10 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: RefreshIndicator(
         onRefresh: _pullRefresh,
         child: ListView(children: <Widget>[
-          if (products.isDefinedAndNotNull)
-            for (dynamic item in products) Card(item: Map.from(item))
+          if (products.isEmpty)
+            const Text('dwd')
           else
-            const Text('Nope. No items here.'),
+            for (dynamic item in products) Card(item: Map.from(item))
         ]),
       ),
     );
