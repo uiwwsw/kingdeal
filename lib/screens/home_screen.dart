@@ -1,6 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:kingdeal/controllers/infinite_scroll_controller.dart';
 import 'package:kingdeal/services/api_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -63,10 +64,66 @@ class _HomeScreenState extends State<HomeScreen> {
         onRefresh: _pullRefresh,
         child: ListView(children: <Widget>[
           if (products.isEmpty)
-            const Text('dwd')
+            const Text('로딩중입니다.')
           else
             for (dynamic item in products) Card(item: Map.from(item))
         ]),
+      ),
+    );
+  }
+}
+
+class InfiniteScrollView extends GetView<InfiniteScrollController<dynamic>> {
+  const InfiniteScrollView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Infinite Scroll'),
+      ),
+      body: Obx(
+        () => Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ListView.separated(
+            controller: controller.scrollController.value,
+            itemBuilder: (_, index) {
+              print(controller.hasMore.value);
+
+              if (index < controller.data.length) {
+                var datum = controller.data[index];
+                return Material(
+                  elevation: 10.0,
+                  child: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ListTile(
+                      leading: const Icon(Icons.android_outlined),
+                      title: Text('$datum 번째 데이터'),
+                      trailing: const Icon(Icons.arrow_forward_outlined),
+                    ),
+                  ),
+                );
+              }
+
+              if (controller.hasMore.value || controller.isLoading.value) {
+                return const Center(child: RefreshProgressIndicator());
+              }
+
+              return Container(
+                padding: const EdgeInsets.all(10.0),
+                child: const Center(
+                  child: Column(
+                    children: [
+                      Text('데이터의 마지막 입니다'),
+                    ],
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (_, index) => const Divider(),
+            itemCount: controller.data.length + 1,
+          ),
+        ),
       ),
     );
   }
