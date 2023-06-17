@@ -126,8 +126,15 @@ class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Text('${widget.datum["convenienceStoreName"]}'),
-      title: Text('${widget.datum['title']} ${widget.datum["size"]}개'),
+      leading: Text(
+        '${widget.datum["convenienceStoreName"]}',
+        style: const TextStyle(fontSize: 20),
+      ),
+      title: Text(
+        '${widget.datum['title']}',
+        style: const TextStyle(fontSize: 20),
+      ),
+      subtitle: Text('${widget.datum["size"]}개'),
       trailing: Text(
           '${int.parse(widget.datum["price"]) * int.parse(widget.datum["size"])}'),
     );
