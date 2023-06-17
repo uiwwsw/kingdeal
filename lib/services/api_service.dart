@@ -9,11 +9,9 @@ class ApiService {
     final url = Uri.parse(
       '//kingdeal.duckdns.org/getDatas',
     );
-    final response = await http
-        .get(url, headers: {HttpHeaders.authorizationHeader: dotenv.env['VAR_NAME']});
-    print(response);
+    final response = await http.get(url,
+        headers: {HttpHeaders.authorizationHeader: dotenv.env['SECRET_KEY']!});
     if (response.statusCode == 200) {
-      print(response.body);
       return jsonDecode(response.body);
     }
     throw Error();

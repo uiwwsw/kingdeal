@@ -57,53 +57,79 @@ class InfiniteScrollView extends GetView<InfiniteScrollController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Infinite Scroll'),
-      ),
-      body: Obx(
-        () => Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ListView.separated(
-            controller: controller.scrollController.value,
-            itemBuilder: (_, index) {
-              // print(controller.hasMore.value);
+    return Obx(
+      () => Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListView.separated(
+          controller: controller.scrollController.value,
+          itemBuilder: (_, index) {
+            // print(controller.hasMore.value);
 
-              if (index < controller.data.length) {
-                var datum = controller.data[index];
-                return Material(
-                  elevation: 10.0,
-                  child: Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ListTile(
-                      leading: const Icon(Icons.android_outlined),
-                      title: Text('$datum 번째 데이터'),
-                      trailing: const Icon(Icons.arrow_forward_outlined),
-                    ),
-                  ),
-                );
-              }
+            if (index < controller.data.length) {
+              var datum = controller.data[index];
 
-              if (controller.hasMore.value || controller.isLoading.value) {
-                return const Center(child: RefreshProgressIndicator());
-              }
-
-              return Container(
-                padding: const EdgeInsets.all(10.0),
-                child: const Center(
-                  child: Column(
-                    children: [
-                      Text('데이터의 마지막 입니다'),
-                    ],
-                  ),
+              return Material(
+                // elevation: 10.0,
+                child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Item(datum: datum),
                 ),
               );
-            },
-            separatorBuilder: (_, index) => const Divider(),
-            itemCount: controller.data.length + 1,
-          ),
+            }
+
+            if (controller.hasMore.value || controller.isLoading.value) {
+              return const Center(child: RefreshProgressIndicator());
+            }
+
+            return Container(
+              padding: const EdgeInsets.all(10.0),
+              child: const Center(
+                child: Column(
+                  children: [
+                    Text('...'),
+                  ],
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (_, index) => const Divider(),
+          itemCount: controller.data.length + 1,
         ),
       ),
+    );
+  }
+}
+
+class Item extends StatefulWidget {
+  const Item({super.key, required this.datum});
+  final dynamic datum;
+  @override
+  State<Item> createState() => _ItemState();
+}
+
+class _ItemState extends State<Item> {
+  String image = '';
+  _ItemState() {
+    init();
+  }
+  Future init() async {
+    // print(widget.datum['src']);
+    // final response = await http.get(
+    //   widget.datum['src'],
+    // );
+    // print(response);
+    // setState(() {
+    //   image = response
+    // });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Text('${widget.datum["convenienceStoreName"]}'),
+      title: Text('${widget.datum['title']} ${widget.datum["size"]}개'),
+      trailing: Text(
+          '${int.parse(widget.datum["price"]) * int.parse(widget.datum["size"])}'),
     );
   }
 }

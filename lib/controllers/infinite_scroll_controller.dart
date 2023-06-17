@@ -10,7 +10,7 @@ class InfiniteScrollController extends GetxController {
   List<dynamic> totalData = [];
   RxInt length = 0.obs;
   RxBool isLoading = false.obs;
-  RxBool hasMore = false.obs;
+  RxBool hasMore = true.obs;
 
   @override
   void onInit() async {
@@ -29,25 +29,24 @@ class InfiniteScrollController extends GetxController {
 
   _getData() async {
     if (totalData.isEmpty) {
-      print('djakwldaw');
-      var res = await ApiService().getDatas();
-      print(res);
-      totalData = jsonDecode(res['data']);
+      final res = await ApiService().getDatas();
+      final resData = jsonDecode(res['data']);
+      if (resData is List) {
+        totalData = resData..shuffle();
+      }
     }
     isLoading.value = true;
 
-    List<dynamic> res = getData();
-    print(res);
+    var someData = getData();
 
-    data.addAll(res);
+    data.addAll(someData);
 
     isLoading.value = false;
-    hasMore.value = res.length > 29;
+    hasMore.value = someData.length > 29;
   }
 
   List<dynamic> getData() {
     length.value = length.value + 30;
-    print(length.value);
     return totalData.sublist(length.value - 30, length.value);
   }
 }
