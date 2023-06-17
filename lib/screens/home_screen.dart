@@ -16,33 +16,11 @@ class _HomeScreenState extends State<HomeScreen> {
   late String updateAt;
   Future<void> _pullRefresh() async {
     final res = await ApiService().getDatas();
-    // res.values.map((x) => {
-    //   data.addAll();
-    // });
     setState(() {
       products = jsonDecode(res['data']);
       updateAt = res['updateAt'];
     });
-    // print(res['data']);
-    // ddt.map((x) {
-    //   print(x);
-    // });
-    // ddt.map((x) {
-    //   print(x);
-    // });
-    // for (var t in products) {
-    //   Map<String, String> d = Map.from(t);
-    //   print(d['title']);
-    // }
-    // prin
-    // print(products);
   }
-
-  // List<dynamic> get products {
-
-  //   if (data['data'] is List) return jsonDecode(data['data']);
-  //   return [];
-  // }
 
   _HomeScreenState() {
     _pullRefresh();
@@ -62,18 +40,19 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: _pullRefresh,
-        child: ListView(children: <Widget>[
-          if (products.isEmpty)
-            const Text('로딩중입니다.')
-          else
-            for (dynamic item in products) Card(item: Map.from(item))
-        ]),
+        child: const InfiniteScrollView(),
+        //   child: ListView(children: <Widget>[
+        //     if (products.isEmpty)
+        //       const Text('로딩중입니다.')
+        //     else
+        //       for (dynamic item in products) Card(item: Map.from(item))
+        //   ]),
       ),
     );
   }
 }
 
-class InfiniteScrollView extends GetView<InfiniteScrollController<dynamic>> {
+class InfiniteScrollView extends GetView<InfiniteScrollController> {
   const InfiniteScrollView({super.key});
 
   @override
@@ -88,7 +67,7 @@ class InfiniteScrollView extends GetView<InfiniteScrollController<dynamic>> {
           child: ListView.separated(
             controller: controller.scrollController.value,
             itemBuilder: (_, index) {
-              print(controller.hasMore.value);
+              // print(controller.hasMore.value);
 
               if (index < controller.data.length) {
                 var datum = controller.data[index];
