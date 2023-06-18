@@ -101,10 +101,9 @@ class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Text(
-        '${widget.datum["convenienceStoreName"]}',
-        style: const TextStyle(fontSize: 20),
-      ),
+      leading: Image.asset(
+          'assets/icons/${widget.datum["convenienceStoreName"]}.png',
+          width: 100),
       title: Text(
         '${widget.datum['title']}',
         style: const TextStyle(fontSize: 18),
