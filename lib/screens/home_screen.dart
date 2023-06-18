@@ -1,31 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:kingdeal/controllers/infinite_scroll_controller.dart';
-import 'package:kingdeal/services/api_service.dart';
+import 'package:intl/intl.dart';
 
-class HomeScreen extends StatefulWidget {
+final oCcy = NumberFormat('###,###');
+
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  List products = [];
-  late String updateAt;
-  Future<void> _pullRefresh() async {
-    final res = await ApiService().getDatas();
-    setState(() {
-      products = jsonDecode(res['data']);
-      updateAt = res['updateAt'];
-    });
-  }
-
-  _HomeScreenState() {
-    _pullRefresh();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,16 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: _pullRefresh,
-        child: const InfiniteScrollView(),
-        //   child: ListView(children: <Widget>[
-        //     if (products.isEmpty)
-        //       const Text('로딩중입니다.')
-        //     else
-        //       for (dynamic item in products) Card(item: Map.from(item))
-        //   ]),
-      ),
+      body: const InfiniteScrollView(),
     );
   }
 }
@@ -123,6 +95,9 @@ class _ItemState extends State<Item> {
     // });
   }
 
+  get price => oCcy.format(
+      int.parse(widget.datum["price"]) * int.parse(widget.datum["size"]));
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -132,11 +107,13 @@ class _ItemState extends State<Item> {
       ),
       title: Text(
         '${widget.datum['title']}',
+        style: const TextStyle(fontSize: 18),
+      ),
+      subtitle: Text(
+        '${widget.datum["size"]}개',
         style: const TextStyle(fontSize: 20),
       ),
-      subtitle: Text('${widget.datum["size"]}개'),
-      trailing: Text(
-          '${int.parse(widget.datum["price"]) * int.parse(widget.datum["size"])}'),
+      trailing: Text(price, style: const TextStyle(fontSize: 16)),
     );
   }
 }

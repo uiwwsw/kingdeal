@@ -42,6 +42,7 @@ dependencies:
   neat_periodic_task: ^2.0.1
   path_provider: ^2.0.15
   get: ^4.6.5
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
