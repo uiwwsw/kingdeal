@@ -8,7 +8,7 @@
 PRODUCT_NAME = kingdeal
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.kingdeal
+PRODUCT_BUNDLE_IDENTIFIER = com.kingdeal
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.kingdeal. All rights reserved.

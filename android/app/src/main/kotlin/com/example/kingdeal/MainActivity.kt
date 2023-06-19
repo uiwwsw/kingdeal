@@ -1,4 +1,4 @@
-package com.example.kingdeal
+package com.kingdeal
 
 import io.flutter.embedding.android.FlutterActivity
 
