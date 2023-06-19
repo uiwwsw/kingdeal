@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kingdeal/controllers/infinite_scroll_controller.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final oCcy = NumberFormat('###,###');
 
@@ -18,7 +21,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _HomeScreenState() {
     banner = BannerAd(
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      adUnitId: Platform.isAndroid
+          ? dotenv.env['AND_BANNER_KEY']!
+          : dotenv.env['IOS_BANNER_KEY']!,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: const BannerAdListener(),
