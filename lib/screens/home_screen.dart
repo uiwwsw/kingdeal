@@ -1,12 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kingdeal/controllers/infinite_scroll_controller.dart';
 import 'package:intl/intl.dart';
 
 final oCcy = NumberFormat('###,###');
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late BannerAd banner;
+
+  _HomeScreenState() {
+    banner = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: const BannerAdListener(),
+    )..load();
+    final BannerAdListener listener = BannerAdListener(
+      // Called when an ad is successfully received.
+      onAdLoaded: (Ad ad) => print('Ad loaded.'),
+      // Called when an ad request failed.
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        // Dispose the ad here to free resources.
+        ad.dispose();
+        print('Ad failed to load: $error');
+      },
+      // Called when an ad opens an overlay that covers the screen.
+      onAdOpened: (Ad ad) => print('Ad opened.'),
+      // Called when an ad removes an overlay that covers the screen.
+      onAdClosed: (Ad ad) => print('Ad closed.'),
+      // Called when an impression occurs on the ad.
+      onAdImpression: (Ad ad) => print('Ad impression.'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,8 +49,15 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: Colors.green,
         title: const Text(
-          "킹받는 킹딜",
+          "핫딜보다 쎈, 킹딜",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: 50.0,
+        color: Colors.transparent,
+        child: AdWidget(
+          ad: banner,
         ),
       ),
       body: const InfiniteScrollView(),
