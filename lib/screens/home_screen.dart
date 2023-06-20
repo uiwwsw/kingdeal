@@ -118,50 +118,68 @@ class InfiniteScrollView extends GetView<InfiniteScrollController> {
   }
 }
 
-class Item extends StatefulWidget {
+class Item extends StatelessWidget {
   const Item({super.key, required this.datum});
   final dynamic datum;
-  @override
-  State<Item> createState() => _ItemState();
-}
 
-class _ItemState extends State<Item> {
-  String image = '';
-  _ItemState() {
-    init();
-  }
-  Future init() async {
-    // print(widget.datum['src']);
-    // final response = await http.get(
-    //   widget.datum['src'],
-    // );
-    // print(response);
-    // setState(() {
-    //   image = response
-    // });
-  }
-
-  get price => oCcy.format(
-      int.parse(widget.datum["price"]) * int.parse(widget.datum["size"]));
+  get price =>
+      oCcy.format(int.parse(datum["price"]) * int.parse(datum["size"]));
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.asset(
-          'assets/icons/${widget.datum["convenienceStoreName"]}.png',
+      leading: Image.asset('assets/icons/${datum["convenienceStoreName"]}.png',
           width: 100),
       title: Text(
-        '${widget.datum['title']}',
+        '${datum['title']}',
         style: const TextStyle(fontSize: 18),
       ),
       subtitle: Text(
-        '${widget.datum["size"]}개',
+        '${datum["size"]}개',
         style: const TextStyle(fontSize: 20),
       ),
       trailing: Text(price, style: const TextStyle(fontSize: 16)),
     );
   }
 }
+
+// class _ItemState extends State<Item> {
+//   // String image = '';
+//   // _ItemState() {
+//   //   init();
+//   // }
+//   // Future init() async {
+//   //   // print(widget.datum['src']);
+//   //   // final response = await http.get(
+//   //   //   widget.datum['src'],
+//   //   // );
+//   //   // print(response);
+//   //   // setState(() {
+//   //   //   image = response
+//   //   // });
+//   // }
+
+//   get price => oCcy.format(
+//       int.parse(widget.datum["price"]) * int.parse(widget.datum["size"]));
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListTile(
+//       leading: Image.asset(
+//           'assets/icons/${widget.datum["convenienceStoreName"]}.png',
+//           width: 100),
+//       title: Text(
+//         '${widget.datum['title']}',
+//         style: const TextStyle(fontSize: 18),
+//       ),
+//       subtitle: Text(
+//         '${widget.datum["size"]}개',
+//         style: const TextStyle(fontSize: 20),
+//       ),
+//       trailing: Text(price, style: const TextStyle(fontSize: 16)),
+//     );
+//   }
+// }
 
 class Card extends StatelessWidget {
   final Map<dynamic, dynamic> item;
