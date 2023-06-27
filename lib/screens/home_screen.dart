@@ -6,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kingdeal/controllers/infinite_scroll_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final oCcy = NumberFormat('###,###');
 
@@ -28,22 +29,22 @@ class _HomeScreenState extends State<HomeScreen> {
       request: const AdRequest(),
       listener: const BannerAdListener(),
     )..load();
-    final BannerAdListener listener = BannerAdListener(
-      // Called when an ad is successfully received.
-      onAdLoaded: (Ad ad) => print('Ad loaded.'),
-      // Called when an ad request failed.
-      onAdFailedToLoad: (Ad ad, LoadAdError error) {
-        // Dispose the ad here to free resources.
-        ad.dispose();
-        print('Ad failed to load: $error');
-      },
-      // Called when an ad opens an overlay that covers the screen.
-      onAdOpened: (Ad ad) => print('Ad opened.'),
-      // Called when an ad removes an overlay that covers the screen.
-      onAdClosed: (Ad ad) => print('Ad closed.'),
-      // Called when an impression occurs on the ad.
-      onAdImpression: (Ad ad) => print('Ad impression.'),
-    );
+    // final BannerAdListener listener = BannerAdListener(
+    //   // Called when an ad is successfully received.
+    //   onAdLoaded: (Ad ad) => print('Ad loaded.'),
+    //   // Called when an ad request failed.
+    //   onAdFailedToLoad: (Ad ad, LoadAdError error) {
+    //     // Dispose the ad here to free resources.
+    //     ad.dispose();
+    //     print('Ad failed to load: $error');
+    //   },
+    //   // Called when an ad opens an overlay that covers the screen.
+    //   onAdOpened: (Ad ad) => print('Ad opened.'),
+    //   // Called when an ad removes an overlay that covers the screen.
+    //   onAdClosed: (Ad ad) => print('Ad closed.'),
+    //   // Called when an impression occurs on the ad.
+    //   onAdImpression: (Ad ad) => print('Ad impression.'),
+    // );
   }
 
   @override
@@ -89,7 +90,7 @@ class InfiniteScrollView extends GetView<InfiniteScrollController> {
               return Material(
                 // elevation: 10.0,
                 child: Container(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.only(top: 6, bottom: 6),
                   child: Item(datum: datum),
                 ),
               );
@@ -127,18 +128,38 @@ class Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Image.asset('assets/icons/${datum["convenienceStoreName"]}.png',
-          width: 100),
-      title: Text(
-        '${datum['title']}',
-        style: const TextStyle(fontSize: 18),
+    return ElevatedButton(
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.resolveWith<double?>(
+          (Set<MaterialState> states) => 0,
+        ),
+        backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.white.withOpacity(0.1);
+            }
+            return Colors.white.withOpacity(0);
+          },
+        ),
       ),
-      subtitle: Text(
-        '${datum["size"]}개',
-        style: const TextStyle(fontSize: 20),
+      onPressed: () => launchUrl(
+        Uri.parse('${datum['link']}'),
       ),
-      trailing: Text(price, style: const TextStyle(fontSize: 16)),
+      child: ListTile(
+        leading: Image.asset(
+            'assets/icons/${datum["convenienceStoreName"]}.png',
+            width: 40,
+            fit: BoxFit.fill),
+        title: Text(
+          '${datum['title']}',
+          style: const TextStyle(fontSize: 18),
+        ),
+        subtitle: Text(
+          '${datum["size"]}개',
+          style: const TextStyle(fontSize: 20),
+        ),
+        trailing: Text(price, style: const TextStyle(fontSize: 16)),
+      ),
     );
   }
 }
@@ -181,33 +202,35 @@ class Item extends StatelessWidget {
 //   }
 // }
 
-class Card extends StatelessWidget {
-  final Map<dynamic, dynamic> item;
-  late final String title;
-  late final String id;
-  late final String src;
-  late final String price;
-  Card({
-    super.key,
-    required this.item,
-  }) {
-    title = item['title'];
-    id = item['id'];
-    src = item['src'];
-    price = item['price'];
-  }
+// class Card extends StatelessWidget {
+//   final Map<dynamic, dynamic> item;
+//   late final String title;
+//   late final String id;
+//   late final String link;
+//   late final String src;
+//   late final String price;
+//   Card({
+//     super.key,
+//     required this.item,
+//   }) {
+//     title = item['title'];
+//     id = item['id'];
+//     link = item['link'];
+//     src = item['src'];
+//     price = item['price'];
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(title),
-        Text(src),
-        Text(price),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: [
+//         Text(title),
+//         Text(src),
+//         Text(price),
+//       ],
+//     );
+//   }
+// }
 // class Card extends StatefulWidget {
 //   final Map<dynamic, dynamic> item;
 //   const Card({super.key, required this.item});

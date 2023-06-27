@@ -29,10 +29,14 @@ class InfiniteScrollController extends GetxController {
 
   _getData() async {
     if (totalData.isEmpty) {
-      final res = await ApiService().getDatas();
-      final resData = jsonDecode(res['data']);
-      if (resData is List) {
-        totalData = resData..shuffle();
+      try {
+        final res = await ApiService().getDatas();
+        final resData = jsonDecode(res['data']);
+        if (resData is List) {
+          totalData = resData..shuffle();
+        }
+      } catch (error) {
+        print(error);
       }
     }
     isLoading.value = true;
