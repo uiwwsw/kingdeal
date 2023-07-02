@@ -78,43 +78,45 @@ class InfiniteScrollView extends GetView<InfiniteScrollController> {
   Widget build(BuildContext context) {
     return Obx(
       () => Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ListView.separated(
-          controller: controller.scrollController.value,
-          itemBuilder: (_, index) {
-            // print(controller.hasMore.value);
+          padding: const EdgeInsets.all(10.0),
+          child: RefreshIndicator(
+            onRefresh: () => controller.onReset(),
+            child: ListView.separated(
+              controller: controller.scrollController.value,
+              itemBuilder: (_, index) {
+                // print(controller.hasMore.value);
 
-            if (index < controller.data.length) {
-              var datum = controller.data[index];
+                if (index < controller.data.length) {
+                  var datum = controller.data[index];
 
-              return Material(
-                // elevation: 10.0,
-                child: Container(
-                  padding: const EdgeInsets.only(top: 6, bottom: 6),
-                  child: Item(datum: datum),
-                ),
-              );
-            }
+                  return Material(
+                    // elevation: 10.0,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 6, bottom: 6),
+                      child: Item(datum: datum),
+                    ),
+                  );
+                }
 
-            if (controller.hasMore.value || controller.isLoading.value) {
-              return const Center(child: RefreshProgressIndicator());
-            }
+                if (controller.hasMore.value || controller.isLoading.value) {
+                  return const Center(child: LinearProgressIndicator());
+                }
 
-            return Container(
-              padding: const EdgeInsets.all(10.0),
-              child: const Center(
-                child: Column(
-                  children: [
-                    Text('...'),
-                  ],
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (_, index) => const Divider(),
-          itemCount: controller.data.length + 1,
-        ),
-      ),
+                return Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: const Center(
+                    child: Column(
+                      children: [
+                        Text('...'),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (_, index) => const Divider(),
+              itemCount: controller.data.length + 1,
+            ),
+          )),
     );
   }
 }

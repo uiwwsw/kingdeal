@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,12 @@ class InfiniteScrollController extends GetxController {
   RxInt length = 0.obs;
   RxBool isLoading = false.obs;
   RxBool hasMore = true.obs;
+
+  Future<void> onReset() async {
+    totalData.clear();
+    data.clear();
+    _getData();
+  }
 
   @override
   void onInit() async {
