@@ -125,8 +125,7 @@ class Item extends StatelessWidget {
   const Item({super.key, required this.datum});
   final dynamic datum;
 
-  get price =>
-      oCcy.format(int.parse(datum["price"]) * int.parse(datum["size"]));
+  get price => oCcy.format(int.parse(datum["price"]));
 
   @override
   Widget build(BuildContext context) {
