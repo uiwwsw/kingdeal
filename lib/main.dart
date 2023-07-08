@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kingdeal/screens/home_screen.dart';
@@ -7,10 +8,11 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'controllers/infinite_scroll_controller.dart';
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
+  if (kReleaseMode) {
+    WidgetsFlutterBinding.ensureInitialized();
+    MobileAds.instance.initialize();
+  }
   await dotenv.load(fileName: ".env");
-
   runApp(const App());
 }
 

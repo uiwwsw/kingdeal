@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -21,30 +22,16 @@ class _HomeScreenState extends State<HomeScreen> {
   late BannerAd banner;
 
   _HomeScreenState() {
-    banner = BannerAd(
-      adUnitId: Platform.isAndroid
-          ? dotenv.env['AND_BANNER_KEY']!
-          : dotenv.env['IOS_BANNER_KEY']!,
-      size: AdSize.banner,
-      request: const AdRequest(),
-      listener: const BannerAdListener(),
-    )..load();
-    // final BannerAdListener listener = BannerAdListener(
-    //   // Called when an ad is successfully received.
-    //   onAdLoaded: (Ad ad) => print('Ad loaded.'),
-    //   // Called when an ad request failed.
-    //   onAdFailedToLoad: (Ad ad, LoadAdError error) {
-    //     // Dispose the ad here to free resources.
-    //     ad.dispose();
-    //     print('Ad failed to load: $error');
-    //   },
-    //   // Called when an ad opens an overlay that covers the screen.
-    //   onAdOpened: (Ad ad) => print('Ad opened.'),
-    //   // Called when an ad removes an overlay that covers the screen.
-    //   onAdClosed: (Ad ad) => print('Ad closed.'),
-    //   // Called when an impression occurs on the ad.
-    //   onAdImpression: (Ad ad) => print('Ad impression.'),
-    // );
+    if (kReleaseMode) {
+      banner = BannerAd(
+        adUnitId: Platform.isAndroid
+            ? dotenv.env['AND_BANNER_KEY']!
+            : dotenv.env['IOS_BANNER_KEY']!,
+        size: AdSize.banner,
+        request: const AdRequest(),
+        listener: const BannerAdListener(),
+      )..load();
+    }
   }
 
   @override
@@ -59,13 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 50.0,
-        color: Colors.transparent,
-        child: AdWidget(
-          ad: banner,
-        ),
-      ),
+      bottomNavigationBar: kReleaseMode
+          ? Container(
+              height: 50.0,
+              color: Colors.transparent,
+              child: AdWidget(
+                ad: banner,
+              ),
+            )
+          : null,
       body: const InfiniteScrollView(),
     );
   }
